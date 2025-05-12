@@ -11,8 +11,8 @@ public class BorrowRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "borrow_record_id")
     private int id;
-    private Long userId;  // From User Service
-    private Long bookId;  // From Book Service
+    private int userId;  // From User Service
+    private int bookId;  // From Book Service
 
     private LocalDate borrowDate;
     private LocalDate dueDate;
@@ -20,4 +20,73 @@ public class BorrowRecord {
 
     @Enumerated(EnumType.STRING)
     private BorrowStatus status;
+
+    public BorrowRecord(int userId, int bookId, LocalDate borrowDate, LocalDate dueDate, LocalDate returnDate, BorrowStatus status) {
+        this.userId = userId;
+        this.bookId = bookId;
+        this.borrowDate = borrowDate;
+        this.dueDate = dueDate;
+        this.returnDate = returnDate;
+        this.status = status;
+    }
+
+    public BorrowRecord() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(int bookId) {
+        this.bookId = bookId;
+    }
+
+    public LocalDate getBorrowDate() {
+        return borrowDate;
+    }
+
+    public void setBorrowDate(LocalDate borrowDate) {
+        this.borrowDate = borrowDate;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public LocalDate getReturnDate() {
+        return returnDate;
+    }
+
+    public void setReturnDate(LocalDate returnDate) {
+        this.returnDate = returnDate;
+    }
+
+    public BorrowStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BorrowStatus status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "BorrowRecord{" + "id=" + id + ", userId=" + userId + ", bookId=" + bookId + ", borrowDate=" + borrowDate + ", dueDate=" + dueDate + ", returnDate=" + returnDate + ", status=" + status + '}';
+    }
 }

@@ -9,7 +9,9 @@ public interface BorrowService {
 
     List<BorrowRecord> getAllBorrowRecords();
 
-    BorrowRecord getBorrowRecordByUserId();
+    BorrowRecord getBorrowRecordById(int borrowId);
 
-    BorrowRecord getBorrowRecordByBookId();
+    List<BorrowRecord> getBorrowRecordByUserId(int userId);
+
+    List<BorrowRecord> getBorrowRecordByBookId(int bookId);
 }
