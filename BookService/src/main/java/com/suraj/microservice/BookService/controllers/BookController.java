@@ -24,9 +24,6 @@ public class BookController {
     @GetMapping("/{bookId}")
     public ResponseEntity<Book> getBookById(@PathVariable int bookId) {
         Book book = bookService.getBookById(bookId);
-        if (book == null) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
         return new ResponseEntity<>(book, HttpStatus.OK);
     }
 
@@ -34,5 +31,10 @@ public class BookController {
     public ResponseEntity<Book> getBookById(@RequestBody Book book) {
         Book savedBook = bookService.saveBook(book);
         return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{bookId}")
+    public ResponseEntity<Book> updateBookById(@RequestBody Book book, @PathVariable int bookId) {
+        return new ResponseEntity<>(bookService.updateBook(book, bookId), HttpStatus.OK);
     }
 }

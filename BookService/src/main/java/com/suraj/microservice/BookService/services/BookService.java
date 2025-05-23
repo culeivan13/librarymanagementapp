@@ -10,4 +10,6 @@ public interface BookService {
     Book getBookById(int id);
 
     Book saveBook(Book book);
+
+    Book updateBook(Book book, int id);
 }

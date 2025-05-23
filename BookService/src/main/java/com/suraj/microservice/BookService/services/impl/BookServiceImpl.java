@@ -1,6 +1,7 @@
 package com.suraj.microservice.BookService.services.impl;
 
 import com.suraj.microservice.BookService.entities.Book;
+import com.suraj.microservice.BookService.exceptions.BookNotFoundException;
 import com.suraj.microservice.BookService.repositories.BookRepository;
 import com.suraj.microservice.BookService.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,22 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Book getBookById(int id) {
-        return bookRepository.findById(id).orElse(null);
+        return bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Book with id " + id + " doesn't exist!"));
     }
 
     @Override
     public Book saveBook(Book book) {
         return bookRepository.save(book);
+    }
+
+    @Override
+    public Book updateBook(Book book, int id) {
+        Book updatedBook = getBookById(id);
+        updatedBook.setTitle(book.getTitle());
+        updatedBook.setCategory(book.getCategory());
+        updatedBook.setAvailableCopies(book.getAvailableCopies());
+        updatedBook.setTotalCopies(book.getTotalCopies());
+
+        return bookRepository.save(updatedBook);
     }
 }
