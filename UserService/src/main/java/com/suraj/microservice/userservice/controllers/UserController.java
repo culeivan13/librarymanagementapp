@@ -6,9 +6,9 @@ import com.suraj.microservice.userservice.dto.BorrowRecord;
 import com.suraj.microservice.userservice.dto.UserBorrowInformation;
 import com.suraj.microservice.userservice.entities.User;
 import com.suraj.microservice.userservice.services.UserService;
+import com.suraj.microservice.userservice.services.impl.BookService;
+import com.suraj.microservice.userservice.services.impl.BorrowRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +25,12 @@ public class UserController {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private BorrowRecordService borrowRecordService;
+
+    @Autowired
+    private BookService bookService;
 
     @PostMapping
     public ResponseEntity<User> saveUser(@RequestBody User user) {
@@ -54,9 +60,12 @@ public class UserController {
         userBorrowInformation.setEmail(user.getEmail());
 
         // fetching the borrow record from borrow service
-        ResponseEntity<List<BorrowRecord>> borrowRecordResponse = restTemplate.exchange("http://BORROW-SERVICE/borrow-record/user/" + userId, HttpMethod.GET, null, new ParameterizedTypeReference<List<BorrowRecord>>() {
-        });
-        List<BorrowRecord> borrowRecordsByUser = borrowRecordResponse.getBody();
+//        ResponseEntity<List<BorrowRecord>> borrowRecordResponse = restTemplate.exchange("http://BORROW-SERVICE/borrow-record/user/" + userId, HttpMethod.GET, null, new ParameterizedTypeReference<List<BorrowRecord>>() {
+//        });
+//        List<BorrowRecord> borrowRecordsByUser = borrowRecordResponse.getBody();
+
+        // using feign client
+        List<BorrowRecord> borrowRecordsByUser = borrowRecordService.getBorrowRecords(userId);
         List<BorrowInformation> borrowInformationList = null;
         // making borrow information list from the borrow records
         if (borrowRecordsByUser != null) {
@@ -68,8 +77,9 @@ public class UserController {
                 borrowInformation.setBorrowStatus(borrowRecord.getStatus().toString());
 
                 // fetching book from the book id in the borrow record
-                Book book = restTemplate.getForObject("http://BOOK-SERVICE/book/" + borrowRecord.getBookId(), Book.class);
-
+//                Book book = restTemplate.getForObject("http://BOOK-SERVICE/book/" + borrowRecord.getBookId(), Book.class);
+                // using feign client
+                Book book = bookService.getBook(borrowRecord.getBookId());
                 if (book != null) {
                     borrowInformation.setTitle(book.getTitle());
                     borrowInformation.setCategory(book.getCategory());
