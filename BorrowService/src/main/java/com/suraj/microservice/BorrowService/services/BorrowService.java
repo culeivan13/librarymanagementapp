@@ -11,7 +11,11 @@ public interface BorrowService {
 
     BorrowRecord getBorrowRecordById(int borrowId);
 
+    BorrowRecord updateBorrowRecord(BorrowRecord borrowRecord, int borrowId);
+
     List<BorrowRecord> getBorrowRecordByUserId(int userId);
 
     List<BorrowRecord> getBorrowRecordByBookId(int bookId);
+
+    BorrowRecord getBorrowRecordByUserIdAndBookId(int userId, int bookId);
 }

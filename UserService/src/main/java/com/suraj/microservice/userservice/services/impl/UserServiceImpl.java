@@ -1,6 +1,7 @@
 package com.suraj.microservice.userservice.services.impl;
 
 import com.suraj.microservice.userservice.entities.User;
+import com.suraj.microservice.userservice.exceptions.UserNotFoundException;
 import com.suraj.microservice.userservice.repositories.UserRepository;
 import com.suraj.microservice.userservice.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(int id) {
-        return userRepository.findById(id).orElse(null);
+    public User getUserById(int userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User with id " + userId + " doesn't exist!"));
     }
 
     @Override

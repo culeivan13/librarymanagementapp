@@ -28,10 +28,12 @@ public class BorrowRecordController {
     @GetMapping("/{borrowId}")
     public ResponseEntity<BorrowRecord> getBorrowRecordById(@PathVariable int borrowId) {
         BorrowRecord record = borrowService.getBorrowRecordById(borrowId);
-        if (record == null) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
         return new ResponseEntity<>(record, HttpStatus.OK);
+    }
+
+    @PutMapping("/{borrowId}")
+    public ResponseEntity<BorrowRecord> updateBorrowRecordById(@RequestBody BorrowRecord borrowRecord, @PathVariable int borrowId) {
+        return new ResponseEntity<>(borrowService.updateBorrowRecord(borrowRecord, borrowId), HttpStatus.OK);
     }
 
     @GetMapping("/user/{userId}")
@@ -42,5 +44,10 @@ public class BorrowRecordController {
     @GetMapping("/book/{bookId}")
     public ResponseEntity<List<BorrowRecord>> getBorrowRecordByBookId(@PathVariable int bookId) {
         return new ResponseEntity<>(borrowService.getBorrowRecordByBookId(bookId), HttpStatus.OK);
+    }
+
+    @GetMapping("/user-book")
+    public ResponseEntity<BorrowRecord> getBorrowRecordByUserIdAndBookId(@RequestParam int userId, @RequestParam int bookId) {
+        return new ResponseEntity<>(borrowService.getBorrowRecordByUserIdAndBookId(userId, bookId), HttpStatus.OK);
     }
 }

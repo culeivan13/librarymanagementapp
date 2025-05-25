@@ -40,9 +40,6 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<User> getUserById(@PathVariable int userId) {
         User user = userService.getUserById(userId);
-        if (user == null) {
-            return new ResponseEntity<>(user, HttpStatus.NOT_FOUND);
-        }
         return new ResponseEntity<>(userService.getUserById(userId), HttpStatus.OK);
     }
 
@@ -52,9 +49,6 @@ public class UserController {
 
         // fetching the given user
         User user = userService.getUserById(userId);
-        if (user == null) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
 
         userBorrowInformation.setName(user.getName());
         userBorrowInformation.setEmail(user.getEmail());
