@@ -8,6 +8,7 @@ import com.suraj.microservice.userservice.entities.User;
 import com.suraj.microservice.userservice.services.UserService;
 import com.suraj.microservice.userservice.services.impl.BookService;
 import com.suraj.microservice.userservice.services.impl.BorrowRecordService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,6 +51,7 @@ public class UserController {
     }
 
     @GetMapping("/borrow-info/{userId}")
+    @CircuitBreaker(name = "userBorrowInformation", fallbackMethod = "getUserBorrowInformationFallback")
     public ResponseEntity<UserBorrowInformation> getUserBorrowInformation(@PathVariable int userId) {
         UserBorrowInformation userBorrowInformation = new UserBorrowInformation();
 
@@ -88,6 +90,20 @@ public class UserController {
             }).toList();
         }
         userBorrowInformation.setBorrowInformation(borrowInformationList);
+        return new ResponseEntity<>(userBorrowInformation, HttpStatus.OK);
+    }
+
+    public ResponseEntity<UserBorrowInformation> getUserBorrowInformationFallback(@PathVariable int userId, Exception ex) {
+        System.out.println("Fallback method is called!");
+        System.out.println(ex.getMessage());
+        UserBorrowInformation userBorrowInformation = new UserBorrowInformation();
+
+        // fetching the given user
+        User user = userService.getUserById(userId);
+
+        userBorrowInformation.setName(user.getName());
+        userBorrowInformation.setEmail(user.getEmail());
+
         return new ResponseEntity<>(userBorrowInformation, HttpStatus.OK);
     }
 }
